@@ -1,12 +1,17 @@
-import React, {Component} from 'react'
-import {Link} from 'react-router-dom'
-
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import HelloWorldService from '../../api/todo/HelloWorldService';
+import HelloWroldService from '../../api/todo/HelloWorldService';
 
 
 class WelcomeComponent extends Component {
     constructor(props) {
       super(props);
+      this.state = {
+        welcomeMessage: ''
+      }
       this.retrieveWelcomeMessage = this.retrieveWelcomeMessage.bind(this);
+      this.handleSuccesfulResponse = this.handleSuccesfulResponse.bind(this);
     }
 
     render() {
@@ -17,22 +22,33 @@ class WelcomeComponent extends Component {
                 Welcome {this.props.match.params.name}. You can manage your todos 
                 <Link to="/todos">here</Link>.
                 </div>
+
                 <div className="container">
                   Click here to get a customized welcome message
                   <button onClick={this.retrieveWelcomeMessage}
                   className="btn btn-success">
                     Get Welcome Message
                   </button>
+                </div>
 
+                <div className="container">
+                  {this.state.welcomeMessage}
                 </div>
             </>
         )        
     }
     
     retrieveWelcomeMessage() {
-      console.log('clicked');
+      HelloWorldService.executeHelloWorldService()
+      .then(response => this.handleSuccesfulResponse(response))
+      .catch()
     }
 
+    handleSuccesfulResponse(response) {
+      this.setState({
+        welcomeMessage: response.data
+      })
+    }
 }
 
 
